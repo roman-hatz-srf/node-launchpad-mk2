@@ -85,13 +85,22 @@ function Launchpad(params){
     self._output.sendMessage([240, 0, 32, 41, 2, 16, 44, layout, 247]);
   }
 
-  this.scrollText = function(text, color, loop, speed){
-    var message = [20, color, loop];
-    for(var i=0;i<text.length;i++){
-      message.push(text.charCodeAt(i));
+  this.scrollText = function (text, color, loop, speed) {
+    var chars = text.split("");
+    var asciis = [];
+
+    var msg = [240, 0, 32, 41, 2, 16, 20, color, loop];
+    for (var i = 0; i < chars.length; i++) {
+      msg.push(chars[i].charCodeAt(0));
     }
-    self.sendSysEx(message);
-    if(speed) self.sendSysEx([20, color, loop, speed]);
+    msg.push(247);
+    self._output.sendMessage(msg);
+  }
+
+  this.setScrollSpeed = function (speed) {
+    var msg = [240, 0, 32, 41, 2, 16, 20, 0, 0, speed];
+    msg.push(247);
+    self._output.sendMessage(msg);
   }
 
   return this;
